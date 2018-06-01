@@ -128,7 +128,7 @@ public class Inicio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BuscarActionPerformed
-        try{
+       try{
             
             String host="localhost";
             int pto=2000;
@@ -136,7 +136,13 @@ public class Inicio extends javax.swing.JFrame {
             DataOutputStream dos= new DataOutputStream(cl.getOutputStream());
             DataInputStream dis= new DataInputStream(cl.getInputStream());
             
-//            dos.writeInt(0);
+            String can= Cancion.getText(); 
+            System.out.println(" "+can);
+            dos.writeUTF(can);
+            
+            
+            
+           
             dos.flush();
             Thread.sleep(5);
             
@@ -145,6 +151,7 @@ public class Inicio extends javax.swing.JFrame {
          e.printStackTrace();
         }  
       
+    
     }//GEN-LAST:event_BuscarActionPerformed
 
     private void CancionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancionActionPerformed

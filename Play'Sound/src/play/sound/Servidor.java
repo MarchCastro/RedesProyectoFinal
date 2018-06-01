@@ -30,6 +30,24 @@ public class Servidor {
             canciones  Thunder=new canciones("Thunder", "Imagine Dragons", "03:07",11);
             canciones  Sweet=new canciones("Sweet child o mine", "Guns N' Roses", "05:54",12);
             
+            
+            for(;;){
+                Socket cl = s.accept();
+                System.out.println("Cliente conectado desde: " + cl.getInetAddress().getHostAddress() + "  :  " + cl.getPort());
+                DataInputStream dis = new DataInputStream(cl.getInputStream());
+                DataOutputStream dos = new DataOutputStream(cl.getOutputStream());
+                
+                
+                String res=dis.readUTF();
+                System.out.println(" "+res);
+                String[] cancion=res.split(" ");
+                System.out.println(" "+cancion);
+                for (int i = 0; i < cancion.length; i++) {
+                    System.out.println(cancion[i]);
+                }
+                
+            }
+            
         }catch(Exception e){
         }
     }
