@@ -34,7 +34,7 @@ public class Inicio extends javax.swing.JFrame {
             "Piano man",
             "Piérdeme el respeto",
             "Thunder",
-            "Sweet child o' mine"
+            "Sweet Child O' Mine"
         };
         
         initComponents();
@@ -153,7 +153,7 @@ public class Inicio extends javax.swing.JFrame {
             public String getElementAt(int i) { return strings[i]; }
         });
         jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jList1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jList1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jList1.setMaximumSize(new java.awt.Dimension(61, 374));
         jList1.setMinimumSize(new java.awt.Dimension(61, 374));
         jScrollPane1.setViewportView(jList1);
@@ -164,7 +164,7 @@ public class Inicio extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 0, 0));
         jLabel3.setText("X");
-        jLabel3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel3.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel3MouseClicked(evt);
@@ -213,9 +213,9 @@ public class Inicio extends javax.swing.JFrame {
         jLabel16.setForeground(new java.awt.Color(255, 255, 255));
         jLabel16.setText("02:40 mins.");
 
-        jLabel17.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel17.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        jLabel18.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel18.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -370,8 +370,8 @@ public class Inicio extends javax.swing.JFrame {
     private void BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BuscarActionPerformed
         try{
 
-            String host="localhost";
-            int pto=2000;
+            String host="127.0.0.1";
+            int pto=9000;
             Socket cl= new Socket(host,pto);
             DataOutputStream dos= new DataOutputStream(cl.getOutputStream());
             DataInputStream dis= new DataInputStream(cl.getInputStream());
@@ -382,7 +382,12 @@ public class Inicio extends javax.swing.JFrame {
 
             dos.flush();
             Thread.sleep(5);
-
+            
+            
+            //NO SIRVE ESTO, SOLO ES PRUEBA...
+            //dos.writeUTF("3");
+            //dos.flush();
+            
         }catch(Exception e){
             e.printStackTrace();
         }
