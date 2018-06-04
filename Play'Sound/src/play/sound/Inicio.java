@@ -383,11 +383,15 @@ public class Inicio extends javax.swing.JFrame {
             dos.flush();
             Thread.sleep(5);
             
+            String res = dis.readUTF();
+            System.out.println("Recibí... "+res);
             
             //NO SIRVE ESTO, SOLO ES PRUEBA...
-            //dos.writeUTF("3");
-            //dos.flush();
+            dos.writeUTF("3");
+            dos.flush();
             
+            res = dis.readUTF();
+            System.out.println("Recibí... "+res);
         }catch(Exception e){
             e.printStackTrace();
         }
