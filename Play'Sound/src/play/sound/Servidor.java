@@ -32,7 +32,6 @@ public class Servidor {
             Cancion d7 = new Cancion(7, "Stayin Alive", "Bee Gees", "Album", "URL", "año", "genero", "04:02", "archivo");
             Cancion d8 = new Cancion(8, "Piano Man", "Billy Joel", "Album", "URL", "año", "genero", "05:36", "archivo");
             Cancion d9 = new Cancion(9, "Pierdeme el respeto", "Playa Limbo", "Album", "URL", "año", "genero", "03:38", "archivo");
-            Cancion d10 = new Cancion(10, "Pierdeme el respeto", "Playa Limbo", "Album", "URL", "año", "genero", "03:07", "archivo");
             Cancion d11 = new Cancion(11, "Thunder", "Imagine Dragons", "Album", "URL", "año", "genero", "03:38", "archivo");
             Cancion d12 = new Cancion(12, "Pierdeme el respeto", "Playa Limbo", "Album", "URL", "año", "genero", "03:07", "archivo");
             Cancion d13 = new Cancion(13, "Sweet child o mine", "Guns N' Roses", "Album", "URL", "año", "genero", "05:54", "archivo");
