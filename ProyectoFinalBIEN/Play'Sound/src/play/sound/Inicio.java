@@ -18,6 +18,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
@@ -26,7 +28,10 @@ import javazoom.jl.player.Player;
 import javazoom.jl.decoder.JavaLayerException;
 
 public class Inicio extends javax.swing.JFrame {
-    public int num;  
+    public int num; 
+    public int idSel = 0;
+    public String[] listCanciones;
+    public int[] listIds;
     public String path = "/home/marce/Desktop/cancion/";
     public String archivo;
     public String Portada;
@@ -34,28 +39,39 @@ public class Inicio extends javax.swing.JFrame {
     public FileInputStream FIS;
     public BufferedInputStream BIS;
     public Boolean flag;
-    public Inicio() {
-        String[] lista = {
-            "Loco",
-            "Loco",
-            "Naufrago",
-            "Bailar",
-            "Turn back",
-            "Have you ever seen the rain?",
-            "How deep is your love?",
-            "Staying alive",
-            "Piano man",
-            "Piérdeme el respeto",
-            "Thunder",
-            "Sweet Child O' Mine"
-        };
+    
+    public Inicio() throws Exception{
+        int pto=9000;
+        Socket cl= new Socket("localhost", pto);
+        DataOutputStream dos= new DataOutputStream(cl.getOutputStream());
+        DataInputStream dis= new DataInputStream(cl.getInputStream());
+        
+        dos.writeInt(0);
+        dos.flush();
+        
+        dos.writeUTF("");
+        dos.flush();
+        
+        Thread.sleep(1);
+        int n = dis.readInt();
+        listCanciones = new String[n];
+        listIds = new int[n];
+        for(int i = 0; i < n; i++){
+            String aux = dis.readUTF();
+            listIds[i] = Integer.parseInt(aux.split("--")[0]);
+            listCanciones[i] = aux.split("--")[1];
+        }
+        
+        dos.close();
+        dis.close();
+        cl.close();
         
         initComponents();
         
         jPanel2.setVisible(false);
         
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = lista;
+            String[] strings = listCanciones;
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
@@ -67,10 +83,17 @@ public class Inicio extends javax.swing.JFrame {
                 if (mouseEvent.getClickCount() == 2) {
                    int index = theList.locationToIndex(mouseEvent.getPoint());
                     if (index >= 0) {
+                        idSel = listIds[index];
                         System.out.println("Clic en el índice: " + index);
+                        System.out.println("Id canción seleccionada: " + idSel);
                         jPanel2.setVisible(true);
                         jList1.setSelectedIndex(index);
-                        despliegaInfo2(index);
+                        Stop();
+                       try {
+                           despliegaInfo2(idSel);
+                       } catch (Exception ex) {
+                           ex.printStackTrace();
+                       }
                     }
                    
                 }
@@ -102,17 +125,21 @@ public class Inicio extends javax.swing.JFrame {
         jLabel17.setIcon(iDescarga);
         this.repaint();*/
     }
-    public void despliegaInfo2(int n){
-        try{
+    public void despliegaInfo2(int n) throws Exception{
             String host="127.0.0.1";
-            int pto=7000;
+            int pto=9000;
             Socket cl= new Socket(host,pto);
+            //System.out.println("ME CONECTÉ");
             DataOutputStream dos= new DataOutputStream(cl.getOutputStream());
-            ObjectInputStream ois= new ObjectInputStream(cl.getInputStream());
             
+            dos.writeInt(1);
+            dos.flush();
+            //System.out.println("MANDÉ UN 1");
             dos.writeInt(n);
             dos.flush();
             Thread.sleep(50);
+            
+            ObjectInputStream ois= new ObjectInputStream(cl.getInputStream());
             
             Cancion c = (Cancion)ois.readObject();
             
@@ -131,9 +158,7 @@ public class Inicio extends javax.swing.JFrame {
             this.repaint();
             dos.close();
             ois.close();
-        }catch(Exception e){
-           e.printStackTrace();
-        }
+            cl.close();
     }
     public void despliegaInfo(int n){
         System.out.println("entra al metodo con " + n);
@@ -221,6 +246,14 @@ public class Inicio extends javax.swing.JFrame {
                 CancionActionPerformed(evt);
             }
         });
+        Cancion.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                CancionKeyTyped(evt);
+            }
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CancionKeyPressed(evt);
+            }
+        });
 
         Buscar.setBackground(new java.awt.Color(246, 0, 0));
         Buscar.setFont(new java.awt.Font("Tw Cen MT", 0, 24)); // NOI18N
@@ -257,7 +290,7 @@ public class Inicio extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 0, 0));
         jLabel3.setText("X");
-        jLabel3.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jLabel3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel3MouseClicked(evt);
@@ -306,14 +339,14 @@ public class Inicio extends javax.swing.JFrame {
         jLabel16.setForeground(new java.awt.Color(255, 255, 255));
         jLabel16.setText("02:40 mins.");
 
-        jLabel17.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jLabel17.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel17.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel17MouseClicked(evt);
             }
         });
 
-        jLabel18.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jLabel18.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel18.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel18MouseClicked(evt);
@@ -469,31 +502,73 @@ public class Inicio extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BuscarActionPerformed
+    
+    private void buscar(){
         try{
-
-            String host="127.0.0.1";
             int pto=9000;
-            Socket cl= new Socket(host,pto);
+            Socket cl= new Socket("localhost", pto);
             DataOutputStream dos= new DataOutputStream(cl.getOutputStream());
             DataInputStream dis= new DataInputStream(cl.getInputStream());
 
-            String can= Cancion.getText();
-            System.out.println(" "+can);
-            dos.writeUTF(can);
-
+            dos.writeInt(0);
             dos.flush();
+
+            dos.writeUTF(Cancion.getText());
+            dos.flush();
+
             Thread.sleep(1);
+            int n = dis.readInt();
+            listCanciones = new String[n];
+            listIds = new int[n];
+            for(int i = 0; i < n; i++){
+                String aux = dis.readUTF();
+                listIds[i] = Integer.parseInt(aux.split("--")[0]);
+                listCanciones[i] = aux.split("--")[1];
+            }
+
+            dos.close();
+            dis.close();
+            cl.close();
             
-            
-            //NO SIRVE ESTO, SOLO ES PRUEBA...
-            //dos.writeUTF("3");
-            //dos.flush();
+            jList1.setModel(new javax.swing.AbstractListModel<String>() {
+                String[] strings = listCanciones;
+                public int getSize() { return strings.length; }
+                public String getElementAt(int i) { return strings[i]; }
+            });
+
+            MouseListener mouseListener;
+            mouseListener = new MouseAdapter() {
+                public void mouseClicked(MouseEvent mouseEvent) {
+                    JList theList = (JList) mouseEvent.getSource();
+                    if (mouseEvent.getClickCount() == 2) {
+                       int index = theList.locationToIndex(mouseEvent.getPoint());
+                        if (index >= 0) {
+                            Stop();
+                            idSel = listIds[index];
+                            System.out.println("Clic en el índice: " + index);
+                            System.out.println("Id canción seleccionada: " + idSel);
+                            jPanel2.setVisible(true);
+                            jList1.setSelectedIndex(index);
+                           try {
+                               despliegaInfo2(idSel);
+                           } catch (Exception ex) {
+                               ex.printStackTrace();
+                           }
+                        }
+
+                    }
+                }
+            };
+            jList1.addMouseListener(mouseListener);
+            this.repaint();
             
         }catch(Exception e){
             e.printStackTrace();
         }
+    }
+    
+    private void BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BuscarActionPerformed
+        buscar();
 
     }//GEN-LAST:event_BuscarActionPerformed
 
@@ -504,6 +579,7 @@ public class Inicio extends javax.swing.JFrame {
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
         jPanel2.setVisible(false);
         jList1.clearSelection();
+        Stop();
     }//GEN-LAST:event_jLabel3MouseClicked
 
     private void jLabel17MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel17MouseClicked
@@ -552,6 +628,15 @@ public class Inicio extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jLabel18MouseClicked
 
+    private void CancionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_CancionKeyTyped
+        
+    }//GEN-LAST:event_CancionKeyTyped
+
+    private void CancionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_CancionKeyPressed
+        if(!Cancion.getText().equals(""))
+            buscar();
+    }//GEN-LAST:event_CancionKeyPressed
+
     /**
      * @param args the command line arguments
      */
@@ -583,7 +668,11 @@ public class Inicio extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Inicio().setVisible(true);
+                try {
+                    new Inicio().setVisible(true);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         });
     }
