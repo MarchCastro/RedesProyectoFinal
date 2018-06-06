@@ -32,7 +32,7 @@ public class Inicio extends javax.swing.JFrame {
     public int idSel = 0;
     public String[] listCanciones;
     public int[] listIds;
-    public String path = "/home/marce/Desktop/cancion/";
+    public String path = "/home/marce/Music/Play_songs/";
     public String archivo;
     public String Portada;
     public Player player;
